@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Intrusion Detection Platform</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div>
+            <h1>🛡️ Intrusion Detection Platform</h1>
+            <p>Security Monitoring & Incident Analysis</p>
+        </div>
+
+        <div class="status">
+            <span class="status-dot"></span>
+            System Online
+        </div>
+    </header>
+
+
+    <main class="dashboard">
+
+        <!-- Risk Overview -->
+
+        <section class="overview">
+
+            <div class="card">
+                <h3>Risk Score</h3>
+                <div id="risk-score">--</div>
+            </div>
+
+            <div class="card">
+                <h3>Risk Level</h3>
+                <div id="risk-level">--</div>
+            </div>
+
+            <div class="card">
+                <h3>Active Alerts</h3>
+                <div id="alert-count">--</div>
+            </div>
+
+            <div class="card">
+                <h3>Incidents</h3>
+                <div id="incident-count">--</div>
+            </div>
+
+        </section>
+
+
+        <!-- Incidents -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+                <h2>🚨 Security Incidents</h2>
+            </div>
+
+            <div id="incidents-container">
+                Loading incidents...
+            </div>
+
+        </section>
+
+
+        <!-- Raw Logs -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+                <h2>📋 Security Logs</h2>
+            </div>
+
+            <div id="logs-container">
+                Loading logs...
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>
