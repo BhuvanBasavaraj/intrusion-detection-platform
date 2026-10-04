@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.log_parser import load_logs
@@ -54,7 +55,7 @@ def analyze_logs():
     }
 
 
-@app.get("/")
+@app.get("/api/status")
 def root():
     return {
         "message": "Intrusion Detection Platform API is running"
@@ -107,3 +108,9 @@ async def upload_logs(file: UploadFile = File(...)):
         "message": "Log file uploaded successfully",
         "filename": file.filename,
     }
+    
+app.mount(
+    "/",
+    StaticFiles(directory="frontend", html=True),
+    name="frontend",
+)
