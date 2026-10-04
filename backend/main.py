@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend.log_parser import load_logs
 from backend.detection_engine import detect_brute_force
@@ -11,6 +12,13 @@ from backend.correlation_engine import correlate_alerts
 
 
 app = FastAPI(title="Intrusion Detection Platform")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def analyze_logs():
