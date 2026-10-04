@@ -9,9 +9,12 @@ from backend.detection_rules import (
 )
 from backend.risk_engine import calculate_risk
 from backend.correlation_engine import correlate_alerts
+from backend.explanation_engine import generate_incident_explanation
 
 
 app = FastAPI(title="Intrusion Detection Platform")
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://127.0.0.1:5500"],
@@ -33,6 +36,11 @@ def analyze_logs():
     risk = calculate_risk(alerts)
 
     incidents = correlate_alerts(alerts, logs)
+
+    for incident in incidents:
+        incident["explanation"] = generate_incident_explanation(
+            incident
+        )
 
     return {
         "logs": logs,
