@@ -29,6 +29,20 @@ def detect_brute_force(logs: list[dict]) -> list[dict]:
             failed_attempts[key] = recent_failures
 
             if len(recent_failures) >= 4:
+                evidence = []
+                
+                for failure in recent_failures:
+                    evidence.append({
+                        "timestamp": failure.isoformat(),
+                        "user": log["user"],
+                        "ip": log["ip"],
+                        "event_type": "LOGIN",
+                        "status": "FAILED",
+                        "resource": None,
+                    })
+
+                evidence.append(log)
+
                 alerts.append({
                     "type": "BRUTE_FORCE",
                     "severity": "HIGH",
@@ -37,8 +51,9 @@ def detect_brute_force(logs: list[dict]) -> list[dict]:
                     "message": (
                         f"{len(recent_failures)} failed login attempts "
                         "followed by a successful login"
-                    ),
+                        ),
                     "timestamp": log["timestamp"],
+                    "evidence": evidence,
                 })
 
     return alerts

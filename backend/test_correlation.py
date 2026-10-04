@@ -15,7 +15,7 @@ alerts.extend(detect_brute_force(logs))
 alerts.extend(detect_privilege_escalation(logs))
 alerts.extend(detect_sensitive_access(logs))
 
-incidents = correlate_alerts(alerts)
+incidents = correlate_alerts(alerts,logs)
 
 print(f"Created {len(incidents)} incident(s)")
 
@@ -35,4 +35,15 @@ for incident in incidents:
             f"- {alert['timestamp']} | "
             f"{alert['type']} | "
             f"{alert['severity']}"
+        )
+
+    print("\nEvidence / Timeline:")
+
+    for log in incident["timeline"]:
+        print(
+            f"- {log['timestamp']} | "
+            f"{log['event_type']} | "
+            f"{log['status']} | "
+            f"{log['user']} | "
+            f"{log['ip']}"
         )
