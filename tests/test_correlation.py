@@ -89,3 +89,77 @@ def test_different_users_form_separate_incidents():
     incidents = correlate_alerts(alerts, logs)
 
     assert len(incidents) == 2
+    
+def test_incident_timeline_contains_attack_stages():
+    alerts = [
+        {
+            "type": "BRUTE_FORCE",
+            "severity": "HIGH",
+            "user": "admin",
+            "ip": "10.0.0.5",
+            "timestamp": "2026-10-04T12:00:30",
+            "message": "Multiple failed login attempts",
+        },
+        {
+            "type": "PRIVILEGE_ESCALATION",
+            "severity": "HIGH",
+            "user": "admin",
+            "ip": "10.0.0.5",
+            "timestamp": "2026-10-04T12:02:00",
+            "message": "Privilege escalation detected",
+        },
+        {
+            "type": "SENSITIVE_RESOURCE_ACCESS",
+            "severity": "HIGH",
+            "user": "admin",
+            "ip": "10.0.0.5",
+            "timestamp": "2026-10-04T12:03:00",
+            "message": "Sensitive resource accessed",
+        },
+    ]
+
+    logs = [
+        {
+            "timestamp": "2026-10-04T12:00:30",
+            "user": "admin",
+            "ip": "10.0.0.5",
+            "event_type": "LOGIN",
+            "status": "FAILED",
+            "resource": None,
+        },
+        {
+            "timestamp": "2026-10-04T12:00:30",
+            "user": "admin",
+            "ip": "10.0.0.5",
+            "event_type": "LOGIN",
+            "status": "SUCCESS",
+            "resource": None,
+        },
+        {
+            "timestamp": "2026-10-04T12:02:00",
+            "user": "admin",
+            "ip": "10.0.0.5",
+            "event_type": "PRIVILEGE_ESCALATION",
+            "status": "SUCCESS",
+            "resource": "admin_panel",
+        },
+        {
+            "timestamp": "2026-10-04T12:03:00",
+            "user": "admin",
+            "ip": "10.0.0.5",
+            "event_type": "FILE_ACCESS",
+            "status": "SUCCESS",
+            "resource": "employee_salaries.csv",
+        },
+    ]
+
+    incidents = correlate_alerts(alerts, logs)
+
+    timeline = incidents[0]["timeline"]
+
+    stages = [event["attack_stage"] for event in timeline]
+
+    assert "Initial Access Attempt" in stages
+    assert "Initial Access" in stages
+    assert "Privilege Escalation" in stages
+    assert "Data Access" in stages
