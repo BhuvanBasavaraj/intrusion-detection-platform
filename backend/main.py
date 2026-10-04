@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.log_parser import load_logs
@@ -88,4 +88,18 @@ def get_logs():
 
     return {
         "logs": result["logs"]
+    }
+    
+@app.post("/api/upload")
+async def upload_logs(file: UploadFile = File(...)):
+    contents = await file.read()
+
+    upload_path = "data/uploaded_logs.csv"
+
+    with open(upload_path, "wb") as output_file:
+        output_file.write(contents)
+
+    return {
+        "message": "Log file uploaded successfully",
+        "filename": file.filename,
     }
