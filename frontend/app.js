@@ -53,7 +53,13 @@ async function loadIncidents() {
                 </div>
 
                 <div class="badge badge-critical">
-                    CRITICAL
+                    ${incident.alerts.some(alert => alert.severity === "CRITICAL")
+                        ? "CRITICAL"
+                        : incident.alerts.some(alert => alert.severity === "HIGH")
+                            ? "HIGH"
+                            : incident.alerts.some(alert => alert.severity === "MEDIUM")
+                                ? "MEDIUM"
+                                : "LOW"}
                 </div>
             </div>
 
@@ -79,15 +85,17 @@ async function loadIncidents() {
                         </div>
 
                         <div class="timeline-event">
-                            ${event.event_type}
-                        </div>
+    ${event.event_type}
+</div>
 
-                        <div class="timeline-details">
-                            Status: ${event.status}
-                            ${event.resource
-                                ? ` | Resource: ${event.resource}`
-                                : ""}
-                        </div>
+<div class="timeline-details">
+    <strong>Stage:</strong> ${event.attack_stage}
+    <br>
+    <strong>Status:</strong> ${event.status}
+    ${event.resource
+        ? ` | <strong>Resource:</strong> ${event.resource}`
+        : ""}
+</div>
 
                     </div>
                 `).join("")}
