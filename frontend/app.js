@@ -162,6 +162,46 @@ async function initializeDashboard() {
             "Unable to connect to backend API.";
     }
 }
+async function uploadLogFile() {
+    const fileInput = document.getElementById("log-file");
+    const status = document.getElementById("upload-status");
+
+    if (!fileInput.files.length) {
+        status.textContent = "Please select a CSV file.";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    status.textContent = "Uploading...";
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/upload`, {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error("Upload failed");
+        }
+
+        status.textContent = "File uploaded. Analyzing...";
+
+        await initializeDashboard();
+
+        status.textContent = "Analysis complete.";
+    } catch (error) {
+        console.error("Upload error:", error);
+        status.textContent = "Upload failed.";
+    }
+}
 
 
-initializeDashboard();
+document.addEventListener("DOMContentLoaded", () => {
+    initializeDashboard();
+
+    document
+        .getElementById("upload-button")
+        .addEventListener("click", uploadLogFile);
+});

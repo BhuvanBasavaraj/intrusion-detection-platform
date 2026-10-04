@@ -25,8 +25,12 @@ app.add_middleware(
 
 
 def analyze_logs():
-    logs = load_logs("data/security_logs.csv")
+    log_file = "data/uploaded_logs.csv"
 
+    if not __import__("os").path.exists(log_file):
+        log_file = "data/security_logs.csv"
+
+    logs = load_logs(log_file)
     alerts = []
 
     alerts.extend(detect_brute_force(logs))
